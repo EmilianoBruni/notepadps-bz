@@ -12,7 +12,7 @@ import {
 } from "@dnd-kit/core"
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { Button } from "@/components/ui/button"
-import { Plus, ChevronsDown, ChevronsUp } from "lucide-react"
+import { Plus, ChevronsDown, ChevronsUp, Trash2 } from "lucide-react"
 import { DraggableCard } from "@/components/draggable-card"
 
 export interface CardData {
@@ -124,6 +124,13 @@ export default function Page() {
     setCards(cards.map((card) => ({ ...card, collapsed: false })))
   }
 
+  function deleteAll() {
+    if (confirm("Sei sicuro di voler eliminare tutti i pazienti?")) {
+      setCards([])
+      localStorage.removeItem("draggable-cards")
+    }
+  }
+
   if (!isClient) {
     return null
   }
@@ -178,10 +185,24 @@ export default function Page() {
               Espandi tutti
             </Button>
             <Button
+              onClick={deleteAll}
+              variant="outline"
+              size="sm"
+              className="gap-2 border bg-transparent"
+              style={{
+                backgroundColor: isDark ? "#7f1d1d" : "#fecaca",
+                color: isDark ? "#fecaca" : "#7f1d1d",
+                borderColor: isDark ? "#991b1b" : "#f87171",
+              }}
+            >
+              <Trash2 className="w-4 h-4" />
+              Elimina tutti
+            </Button>
+            <Button
               onClick={addCard}
               className="gap-2"
               style={{
-                backgroundColor: isDark ? "white" : "black",
+                backgroundColor: isDark ? "white" : "blue",
                 color: isDark ? "black" : "white",
               }}
             >
