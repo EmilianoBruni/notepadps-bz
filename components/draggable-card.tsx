@@ -1,7 +1,5 @@
 "use client"
 
-import { useSortable } from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -41,30 +39,18 @@ const colorSwatchMap = {
 }
 
 export function DraggableCard({ card, onUpdate, onRemove }: DraggableCardProps) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: card.id })
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-  }
-
-  const printHeader = `${colorNameItalian[card.color as keyof typeof colorNameItalian]} - ${card.textField1} - ${card.textField2} - ${card.ot} - ${card.rd} - ${card.textbox}`
+  const printHeader = `${colorNameItalian[card.color as keyof typeof colorNameItalian]} - ${card.patientName} - ${card.patology} - ${card.location} - ${card.moved} - ${card.movedTo}`
 
   return (
-    <div ref={setNodeRef} style={style} className="relative">
+    <div className="relative">
       <div className="hidden print:block print-header">{printHeader}</div>
 
       <Card className={`${colorMap[card.color]} transition-colors border-2 print-card py-2 !bg-opacity-100`}>
         <CardContent className="pt-2 print-content px-2">
           <div className="flex items-center gap-2 mb-0.5 print:hidden">
-            <button
-              {...attributes}
-              {...listeners}
-              className="cursor-grab active:cursor-grabbing p-1 hover:bg-black/5 rounded text-slate-700"
-            >
+            <div className="cursor-grab active:cursor-grabbing p-1 hover:bg-black/5 rounded text-slate-700">
               <GripVertical className="w-5 h-5" />
-            </button>
+            </div>
 
             <Select value={card.color} onValueChange={(value) => onUpdate({ color: value as CardData["color"] })}>
               <SelectTrigger className="w-32 h-8 !bg-white border-slate-300 text-black">
@@ -93,23 +79,29 @@ export function DraggableCard({ card, onUpdate, onRemove }: DraggableCardProps) 
 
             <Input
               placeholder="Paziente"
-              value={card.textField1}
-              onChange={(e) => onUpdate({ textField1: e.target.value })}
+              value={card.patientName}
+              onChange={(e) => onUpdate({ patientName: e.target.value })}
               className="h-8 font-bold !bg-white border-slate-300 text-black placeholder:text-slate-400"
             />
 
             <Input
               placeholder="Patologia"
-              value={card.textField2}
-              onChange={(e) => onUpdate({ textField2: e.target.value })}
+              value={card.patology}
+              onChange={(e) => onUpdate({ patology: e.target.value })}
               className="h-8 !bg-white border-slate-300 text-black placeholder:text-slate-400"
             />
 
-            <Select value={card.ot} onValueChange={(value) => onUpdate({ ot: value as CardData["ot"] })}>
+            <Select
+              value={card.location}
+              onValueChange={(value) => onUpdate({ location: value as CardData["location"] })}
+            >
               <SelectTrigger className="w-24 h-8 !bg-white border-slate-300 text-black">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-white border-slate-300 text-black">
+                <SelectItem value="empty" className="text-black">
+                  -
+                </SelectItem>
                 <SelectItem value="OT1" className="text-black">
                   OT1
                 </SelectItem>
@@ -128,11 +120,14 @@ export function DraggableCard({ card, onUpdate, onRemove }: DraggableCardProps) 
               </SelectContent>
             </Select>
 
-            <Select value={card.rd} onValueChange={(value) => onUpdate({ rd: value as CardData["rd"] })}>
+            <Select value={card.moved} onValueChange={(value) => onUpdate({ moved: value as CardData["moved"] })}>
               <SelectTrigger className="w-20 h-8 !bg-white border-slate-300 text-black">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-white border-slate-300 text-black">
+                <SelectItem value="empty" className="text-black">
+                  -
+                </SelectItem>
                 <SelectItem value="R" className="text-black">
                   R
                 </SelectItem>
@@ -144,8 +139,8 @@ export function DraggableCard({ card, onUpdate, onRemove }: DraggableCardProps) 
 
             <Input
               placeholder="Dove..."
-              value={card.textbox}
-              onChange={(e) => onUpdate({ textbox: e.target.value })}
+              value={card.movedTo}
+              onChange={(e) => onUpdate({ movedTo: e.target.value })}
               className="h-8 w-32 !bg-white border-slate-300 text-black placeholder:text-slate-400"
             />
 

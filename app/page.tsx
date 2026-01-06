@@ -1,28 +1,21 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core"
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { Button } from "@/components/ui/button"
-import { Plus, ChevronsDown, ChevronsUp, Trash2 } from "lucide-react"
+import { Plus, ChevronsDown, ChevronsUp, Trash2, Search } from "lucide-react"
 import { DraggableCard } from "@/components/draggable-card"
+import { Input } from "@/components/ui/input"
 
 export interface CardData {
   id: string
   color: "rosso" | "giallo" | "blu" | "verde" | "bianco"
-  textField1: string
-  textField2: string
-  ot: "OT1" | "OT2" | "COR" | "ACQ" | "TRI"
-  rd: "R" | "D"
-  textbox: string
+  patientName: string
+  patology: string
+  location: "OT1" | "OT2" | "COR" | "ACQ" | "TRI" | "empty"
+  moved: "R" | "D" | "empty"
+  movedTo: string
   content: string
   collapsed?: boolean
 }
@@ -31,13 +24,10 @@ export default function Page() {
   const [cards, setCards] = useState<CardData[]>([])
   const [isClient, setIsClient] = useState(false)
   const [isDark, setIsDark] = useState(false)
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  )
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [searchQuery, setSearchQuery] = useState("")
+  const [touchStartY, setTouchStartY] = useState<number | null>(null)
+  const [touchCurrentY, setTouchCurrentY] = useState<number | null>(null)
 
   useEffect(() => {
     setIsClient(true)
@@ -82,26 +72,70 @@ export default function Page() {
     return {
       id: `card-${Date.now()}-${Math.random()}`,
       color: "bianco",
-      textField1: "",
-      textField2: "",
-      ot: "OT1",
-      rd: "R",
-      textbox: "",
+      patientName: "",
+      patology: "",
+      location: "empty",
+      moved: "empty",
+      movedTo: "",
       content: "",
       collapsed: false,
     }
   }
 
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event
+  function handleDragStart(index: number) {
+    setDraggedIndex(index)
+  }
 
-    if (over && active.id !== over.id) {
-      setCards((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id)
-        const newIndex = items.findIndex((item) => item.id === over.id)
-        return arrayMove(items, oldIndex, newIndex)
-      })
+  function handleDragOver(e: React.DragEvent, index: number) {
+    e.preventDefault()
+    if (draggedIndex === null || draggedIndex === index) return
+
+    const newCards = [...cards]
+    const draggedCard = newCards[draggedIndex]
+    newCards.splice(draggedIndex, 1)
+    newCards.splice(index, 0, draggedCard)
+    setCards(newCards)
+    setDraggedIndex(index)
+  }
+
+  function handleDragEnd() {
+    setDraggedIndex(null)
+  }
+
+  function handleTouchStart(e: React.TouchEvent, index: number) {
+    setDraggedIndex(index)
+    setTouchStartY(e.touches[0].clientY)
+    setTouchCurrentY(e.touches[0].clientY)
+  }
+
+  function handleTouchMove(e: React.TouchEvent, currentIndex: number) {
+    if (draggedIndex === null || touchStartY === null) return
+
+    const touch = e.touches[0]
+    setTouchCurrentY(touch.clientY)
+
+    // Calculate which card we're over
+    const element = document.elementFromPoint(touch.clientX, touch.clientY)
+    const cardElement = element?.closest("[data-card-index]")
+
+    if (cardElement) {
+      const overIndex = Number.parseInt(cardElement.getAttribute("data-card-index") || "0")
+
+      if (overIndex !== draggedIndex && overIndex !== currentIndex) {
+        const newCards = [...cards]
+        const draggedCard = newCards[draggedIndex]
+        newCards.splice(draggedIndex, 1)
+        newCards.splice(overIndex, 0, draggedCard)
+        setCards(newCards)
+        setDraggedIndex(overIndex)
+      }
     }
+  }
+
+  function handleTouchEnd() {
+    setDraggedIndex(null)
+    setTouchStartY(null)
+    setTouchCurrentY(null)
   }
 
   function addCard() {
@@ -131,6 +165,8 @@ export default function Page() {
     }
   }
 
+  const filteredCards = cards.filter((card) => card.patientName.toLowerCase().includes(searchQuery.toLowerCase()))
+
   if (!isClient) {
     return null
   }
@@ -138,10 +174,26 @@ export default function Page() {
   return (
     <div className="min-h-screen p-6 print:bg-white print:p-0" style={{ backgroundColor: isDark ? "black" : "white" }}>
       <div className="max-w-full mx-auto space-y-6">
-        <div className="flex items-center justify-between print:hidden">
+        <div className="flex items-center justify-between print:hidden gap-4">
           <h1 className="text-3xl font-bold" style={{ color: isDark ? "white" : "black" }}>
             Promemoria pazienti
           </h1>
+
+          <div className="relative w-64">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Input
+              type="text"
+              placeholder="Cerca per nome paziente..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 !bg-white !text-black border-gray-300"
+              style={{
+                backgroundColor: "white",
+                color: "black",
+              }}
+            />
+          </div>
+
           <div className="flex gap-2">
             <Button
               onClick={() => setIsDark(!isDark)}
@@ -212,20 +264,49 @@ export default function Page() {
           </div>
         </div>
 
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={cards.map((c) => c.id)} strategy={verticalListSortingStrategy}>
-            <div className="space-y-4">
-              {cards.map((card) => (
-                <DraggableCard
-                  key={card.id}
-                  card={card}
-                  onUpdate={(updates) => updateCard(card.id, updates)}
-                  onRemove={() => removeCard(card.id)}
-                />
-              ))}
+        <div className="space-y-4">
+          {filteredCards.map((card, index) => (
+            <div
+              key={card.id}
+              data-card-index={cards.findIndex((c) => c.id === card.id)}
+              draggable
+              onDragStart={() => handleDragStart(cards.findIndex((c) => c.id === card.id))}
+              onDragOver={(e) =>
+                handleDragOver(
+                  e,
+                  cards.findIndex((c) => c.id === card.id),
+                )
+              }
+              onDragEnd={handleDragEnd}
+              onTouchStart={(e) =>
+                handleTouchStart(
+                  e,
+                  cards.findIndex((c) => c.id === card.id),
+                )
+              }
+              onTouchMove={(e) =>
+                handleTouchMove(
+                  e,
+                  cards.findIndex((c) => c.id === card.id),
+                )
+              }
+              onTouchEnd={handleTouchEnd}
+              className={draggedIndex === cards.findIndex((c) => c.id === card.id) ? "opacity-50" : ""}
+            >
+              <DraggableCard
+                card={card}
+                onUpdate={(updates) => updateCard(card.id, updates)}
+                onRemove={() => removeCard(card.id)}
+              />
             </div>
-          </SortableContext>
-        </DndContext>
+          ))}
+        </div>
+
+        {filteredCards.length === 0 && cards.length > 0 && (
+          <div className="text-center py-12 print:hidden" style={{ color: isDark ? "#94a3b8" : "#64748b" }}>
+            Nessun paziente trovato con il nome "{searchQuery}".
+          </div>
+        )}
 
         {cards.length === 0 && (
           <div className="text-center py-12 print:hidden" style={{ color: isDark ? "#94a3b8" : "#64748b" }}>
