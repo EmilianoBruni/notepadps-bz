@@ -184,12 +184,13 @@ export default function Page() {
               onClick={() => setIsDark(!isDark)}
               variant="outline"
               size="sm"
-              className="gap-2 border"
+              className="border"
               style={{
                 backgroundColor: isDark ? "#1e293b" : "white",
                 color: isDark ? "white" : "black",
                 borderColor: isDark ? "#475569" : "#cbd5e1",
               }}
+              title={isDark ? "Modalità chiara" : "Modalità scura"}
             >
               {isDark ? "🌙" : "☀️"}
             </Button>
@@ -197,54 +198,53 @@ export default function Page() {
               onClick={collapseAll}
               variant="outline"
               size="sm"
-              className="gap-2 border bg-transparent"
+              className="border bg-transparent"
               style={{
                 backgroundColor: isDark ? "#1e293b" : "white",
                 color: isDark ? "white" : "black",
                 borderColor: isDark ? "#475569" : "#cbd5e1",
               }}
+              title="Collassa tutti"
             >
               <ChevronsUp className="w-4 h-4" />
-              Collassa tutti
             </Button>
             <Button
               onClick={expandAll}
               variant="outline"
               size="sm"
-              className="gap-2 border bg-transparent"
+              className="border bg-transparent"
               style={{
                 backgroundColor: isDark ? "#1e293b" : "white",
                 color: isDark ? "white" : "black",
                 borderColor: isDark ? "#475569" : "#cbd5e1",
               }}
+              title="Espandi tutti"
             >
               <ChevronsDown className="w-4 h-4" />
-              Espandi tutti
             </Button>
             <Button
               onClick={deleteAll}
               variant="outline"
               size="sm"
-              className="gap-2 border bg-transparent"
+              className="border bg-transparent"
               style={{
                 backgroundColor: isDark ? "#7f1d1d" : "#fecaca",
                 color: isDark ? "#fecaca" : "#7f1d1d",
                 borderColor: isDark ? "#991b1b" : "#f87171",
               }}
+              title="Elimina tutti"
             >
               <Trash2 className="w-4 h-4" />
-              Elimina tutti
             </Button>
             <Button
               onClick={addCard}
-              className="gap-2"
               style={{
                 backgroundColor: isDark ? "white" : "blue",
                 color: isDark ? "black" : "white",
               }}
+              title="Aggiungi paziente"
             >
               <Plus className="w-4 h-4" />
-              Aggiungi paziente
             </Button>
           </div>
         </div>
