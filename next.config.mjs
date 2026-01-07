@@ -2,6 +2,7 @@
 const nextConfig = {
     output: "export",
     distDir: "notepadps-bz",
+    basePath: "/notepadps-bz",
     typescript: {
         ignoreBuildErrors: true,
     },
