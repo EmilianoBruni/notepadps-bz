@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output: "static",
+    output: "export",
     distDir: "notepadps-bz",
     webpack: (config, options) => {
         // per verificare che watch guardi le directory giuste
