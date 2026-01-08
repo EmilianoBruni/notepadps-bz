@@ -64,7 +64,7 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     return (
         <div>
             {isToolbarOpen && (
-                <div className="border border-slate-300 rounded-lg overflow-hidden mb-1 bg-slate-50">
+                <div className="border border-slate-300 rounded-lg overflow-hidden mb-1 bg-slate-50 print:hidden">
                     <div className="flex items-center gap-2 p-2">
                         <Button
                             type="button"
