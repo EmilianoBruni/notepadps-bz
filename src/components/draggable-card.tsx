@@ -85,7 +85,8 @@ export function DraggableCard({
                 draggable={false}
             >
                 <CardContent className="pt-2 print-content px-2">
-                    <div className="flex items-center gap-2 mb-0.5 print:hidden">
+                    {/* XL screens: all in one row */}
+                    <div className="hidden xl:flex items-center gap-2 mb-0.5 print:hidden">
                         <div
                             draggable
                             onDragStart={onDragStart}
@@ -181,7 +182,7 @@ export function DraggableCard({
                             onChange={e =>
                                 onUpdate({ patientName: e.target.value })
                             }
-                            className="h-8 font-bold bg-white! border-slate-300 text-black placeholder:text-slate-400"
+                            className="h-8 font-bold bg-white! border-slate-300 text-black placeholder:text-slate-400 flex-1 min-w-0"
                         />
 
                         <Input
@@ -190,7 +191,7 @@ export function DraggableCard({
                             onChange={e =>
                                 onUpdate({ patology: e.target.value })
                             }
-                            className="h-8 bg-white! border-slate-300 text-black placeholder:text-slate-400"
+                            className="h-8 bg-white! border-slate-300 text-black placeholder:text-slate-400 flex-1 min-w-0"
                         />
 
                         <Select
@@ -269,7 +270,7 @@ export function DraggableCard({
                             onChange={e =>
                                 onUpdate({ movedTo: e.target.value })
                             }
-                            className="h-8 w-32 bg-white! border-slate-300 text-black placeholder:text-slate-400"
+                            className="h-8 flex-1 min-w-0 bg-white! border-slate-300 text-black placeholder:text-slate-400"
                         />
 
                         <Button
@@ -278,7 +279,7 @@ export function DraggableCard({
                             }
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 ml-auto text-slate-700 hover:bg-slate-200"
+                            className="h-8 w-8 text-slate-700 hover:bg-slate-200"
                         >
                             {card.collapsed ? (
                                 <ChevronDown className="w-4 h-4" />
@@ -295,6 +296,258 @@ export function DraggableCard({
                         >
                             <X className="w-4 h-4" />
                         </Button>
+                    </div>
+
+                    {/* < XL screens: two rows */}
+                    <div className="flex xl:hidden flex-col gap-2 mb-0.5 print:hidden">
+                        {/* Row 1: Grip, Arrows, Color, Paziente, Patologia */}
+                        <div className="flex items-center gap-2">
+                            <div
+                                draggable
+                                onDragStart={onDragStart}
+                                onDragEnd={onDragEnd}
+                                className="cursor-grab active:cursor-grabbing p-1 hover:bg-black/5 rounded text-slate-700"
+                            >
+                                <GripVertical className="w-5 h-5" />
+                            </div>
+
+                            <div className="flex flex-col gap-0.5">
+                                <Button
+                                    onClick={onMoveUp}
+                                    disabled={!canMoveUp}
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-4 w-6 text-slate-700 hover:bg-slate-200 disabled:opacity-30 p-0"
+                                >
+                                    <ArrowUp className="w-3 h-3" />
+                                </Button>
+                                <Button
+                                    onClick={onMoveDown}
+                                    disabled={!canMoveDown}
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-4 w-6 text-slate-700 hover:bg-slate-200 disabled:opacity-30 p-0"
+                                >
+                                    <ArrowDown className="w-3 h-3" />
+                                </Button>
+                            </div>
+
+                            <Select
+                                value={card.color}
+                                onValueChange={value =>
+                                    onUpdate({
+                                        color: value as CardData['color']
+                                    })
+                                }
+                            >
+                                <SelectTrigger className="w-32 h-8 bg-white! border-slate-300 text-black">
+                                    <SelectValue className="flex items-center justify-center">
+                                        <div
+                                            className={`w-10 h-5 rounded ${
+                                                colorSwatchMap[card.color]
+                                            }`}
+                                        />
+                                    </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent className="bg-white border-slate-300 text-black">
+                                    <SelectItem
+                                        value="rosso"
+                                        className="flex items-center justify-center text-black"
+                                    >
+                                        <div
+                                            className={`w-10 h-5 rounded ${colorSwatchMap.rosso}`}
+                                        />
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="giallo"
+                                        className="flex items-center justify-center text-black"
+                                    >
+                                        <div
+                                            className={`w-10 h-5 rounded ${colorSwatchMap.giallo}`}
+                                        />
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="blu"
+                                        className="flex items-center justify-center text-black"
+                                    >
+                                        <div
+                                            className={`w-10 h-5 rounded ${colorSwatchMap.blu}`}
+                                        />
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="verde"
+                                        className="flex items-center justify-center text-black"
+                                    >
+                                        <div
+                                            className={`w-10 h-5 rounded ${colorSwatchMap.verde}`}
+                                        />
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="bianco"
+                                        className="flex items-center justify-center text-black"
+                                    >
+                                        <div
+                                            className={`w-10 h-5 rounded ${colorSwatchMap.bianco}`}
+                                        />
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                            <Input
+                                placeholder="Paziente"
+                                value={card.patientName}
+                                onChange={e =>
+                                    onUpdate({ patientName: e.target.value })
+                                }
+                                className="h-8 font-bold bg-white! border-slate-300 text-black placeholder:text-slate-400 flex-1 min-w-0"
+                            />
+
+                            <Input
+                                placeholder="Patologia"
+                                value={card.patology}
+                                onChange={e =>
+                                    onUpdate({ patology: e.target.value })
+                                }
+                                className="h-8 bg-white! border-slate-300 text-black placeholder:text-slate-400 flex-1 min-w-0"
+                            />
+                        </div>
+
+                        {/* Row 2: Location, Moved, MovedTo, Buttons */}
+                        <div className="flex items-center gap-2">
+                            <div className="w-5"></div> {/* Spacer for grip */}
+                            <div className="w-6"></div>{' '}
+                            {/* Spacer for arrows */}
+                            <Select
+                                value={card.location}
+                                onValueChange={value =>
+                                    onUpdate({
+                                        location: value as CardData['location']
+                                    })
+                                }
+                            >
+                                <SelectTrigger className="w-24 h-8 bg-white! border-slate-300 text-black">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent className="bg-white border-slate-300 text-black">
+                                    <SelectItem
+                                        value="empty"
+                                        className="text-black"
+                                    >
+                                        -
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="OBI1"
+                                        className="text-black"
+                                    >
+                                        OBI1
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="OBI2"
+                                        className="text-black"
+                                    >
+                                        OBI2
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="OBI3"
+                                        className="text-black"
+                                    >
+                                        OBI3
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="OT1"
+                                        className="text-black"
+                                    >
+                                        OT1
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="OT2"
+                                        className="text-black"
+                                    >
+                                        OT2
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="COR"
+                                        className="text-black"
+                                    >
+                                        COR
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="ACQ"
+                                        className="text-black"
+                                    >
+                                        ACQ
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="TRI"
+                                        className="text-black"
+                                    >
+                                        TRI
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <Select
+                                value={card.moved}
+                                onValueChange={value =>
+                                    onUpdate({
+                                        moved: value as CardData['moved']
+                                    })
+                                }
+                            >
+                                <SelectTrigger className="w-20 h-8 bg-white! border-slate-300 text-black">
+                                    <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent className="bg-white border-slate-300 text-black">
+                                    <SelectItem
+                                        value="empty"
+                                        className="text-black"
+                                    >
+                                        -
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="R"
+                                        className="text-black"
+                                    >
+                                        R
+                                    </SelectItem>
+                                    <SelectItem
+                                        value="D"
+                                        className="text-black"
+                                    >
+                                        D
+                                    </SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <Input
+                                placeholder="Dove..."
+                                value={card.movedTo}
+                                onChange={e =>
+                                    onUpdate({ movedTo: e.target.value })
+                                }
+                                className="h-8 flex-1 min-w-0 bg-white! border-slate-300 text-black placeholder:text-slate-400"
+                            />
+                            <Button
+                                onClick={() =>
+                                    onUpdate({ collapsed: !card.collapsed })
+                                }
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-slate-700 hover:bg-slate-200"
+                            >
+                                {card.collapsed ? (
+                                    <ChevronDown className="w-4 h-4" />
+                                ) : (
+                                    <ChevronUp className="w-4 h-4" />
+                                )}
+                            </Button>
+                            <Button
+                                onClick={onRemove}
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-slate-700 hover:bg-slate-200"
+                            >
+                                <X className="w-4 h-4" />
+                            </Button>
+                        </div>
                     </div>
 
                     {!card.collapsed && (
