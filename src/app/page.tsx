@@ -14,7 +14,16 @@ export interface CardData {
     color: 'rosso' | 'giallo' | 'blu' | 'verde' | 'bianco';
     patientName: string;
     patology: string;
-    location: 'OT1' | 'OT2' | 'COR' | 'ACQ' | 'TRI' | 'empty';
+    location:
+        | 'OT1'
+        | 'OT2'
+        | 'COR'
+        | 'ACQ'
+        | 'TRI'
+        | 'empty'
+        | 'OBI1'
+        | 'OBI2'
+        | 'OBI3';
     moved: 'R' | 'D' | 'empty';
     movedTo: string;
     content: string;

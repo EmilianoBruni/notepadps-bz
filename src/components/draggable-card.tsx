@@ -64,14 +64,20 @@ export function DraggableCard({
     canMoveUp,
     canMoveDown
 }: DraggableCardProps) {
-    const printHeader = `${colorNameItalian[card.color as keyof typeof colorNameItalian]} - ${card.patientName} - ${card.patology} - ${card.location} - ${card.moved} - ${card.movedTo}`;
+    const printHeader = `${
+        colorNameItalian[card.color as keyof typeof colorNameItalian]
+    } - ${card.patientName} - ${card.patology} - ${card.location} - ${
+        card.moved
+    } - ${card.movedTo}`;
 
     return (
         <div className="relative">
             <div className="hidden print:block print-header">{printHeader}</div>
 
             <Card
-                className={`${colorMap[card.color]} transition-colors border-2 print-card py-2 !bg-opacity-100`}
+                className={`${
+                    colorMap[card.color]
+                } transition-colors border-2 print-card py-2 !bg-opacity-100`}
             >
                 <CardContent className="pt-2 print-content px-2">
                     <div className="flex items-center gap-2 mb-0.5 print:hidden">
@@ -109,7 +115,9 @@ export function DraggableCard({
                             <SelectTrigger className="w-32 h-8 !bg-white border-slate-300 text-black">
                                 <SelectValue className="flex items-center justify-center">
                                     <div
-                                        className={`w-10 h-5 rounded ${colorSwatchMap[card.color]}`}
+                                        className={`w-10 h-5 rounded ${
+                                            colorSwatchMap[card.color]
+                                        }`}
                                     />
                                 </SelectValue>
                             </SelectTrigger>
@@ -192,6 +200,15 @@ export function DraggableCard({
                                     className="text-black"
                                 >
                                     -
+                                </SelectItem>
+                                <SelectItem value="OBI1" className="text-black">
+                                    OBI1
+                                </SelectItem>
+                                <SelectItem value="OBI2" className="text-black">
+                                    OBI2
+                                </SelectItem>
+                                <SelectItem value="OBI3" className="text-black">
+                                    OBI3
                                 </SelectItem>
                                 <SelectItem value="OT1" className="text-black">
                                     OT1
