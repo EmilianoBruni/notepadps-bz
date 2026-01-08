@@ -29,19 +29,21 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     const [selectedColor, setSelectedColor] = useState('#000000');
     const [isToolbarOpen, setIsToolbarOpen] = useState(false);
 
+    const adjustHeight = () => {
+        if (editorRef.current) {
+            editorRef.current.style.height = 'auto';
+            editorRef.current.style.height = `${Math.max(
+                75,
+                editorRef.current.scrollHeight
+            )}px`;
+        }
+    };
     useEffect(() => {
         if (editorRef.current && editorRef.current.innerHTML !== value) {
             editorRef.current.innerHTML = value;
             adjustHeight();
         }
     }, [value]);
-
-    const adjustHeight = () => {
-        if (editorRef.current) {
-            editorRef.current.style.height = 'auto';
-            editorRef.current.style.height = `${Math.max(75, editorRef.current.scrollHeight)}px`;
-        }
-    };
 
     const handleInput = () => {
         if (editorRef.current) {
