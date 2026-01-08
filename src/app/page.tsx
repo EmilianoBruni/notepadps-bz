@@ -5,6 +5,7 @@ import type React from 'react';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search } from 'lucide-react';
+import { Github } from '@/components/icons/github';
 import { DraggableCard } from '@/components/draggable-card';
 import { Input } from '@/components/ui/input';
 import { ActionButtons } from '@/components/action-buttons';
@@ -204,12 +205,26 @@ export default function Page() {
         >
             <div className="max-w-full mx-auto space-y-6">
                 <div className="flex items-center justify-between print:hidden gap-4">
-                    <h1
-                        className="text-3xl font-bold"
-                        style={{ color: isDark ? 'white' : 'black' }}
-                    >
-                        E.R. Flow
-                    </h1>
+                    <div className="flex items-center gap-3">
+                        <h1
+                            className="text-3xl font-bold"
+                            style={{ color: isDark ? 'white' : 'black' }}
+                        >
+                            E.R. Flow
+                        </h1>
+                        <a
+                            href="https://github.com/emilianobruni/erflow"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:opacity-70 transition-opacity"
+                            aria-label="GitHub Repository"
+                        >
+                            <Github
+                                className="w-6 h-6"
+                                style={{ color: isDark ? 'white' : 'black' }}
+                            />
+                        </a>
+                    </div>
 
                     <div className="relative w-64">
                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -279,7 +294,27 @@ export default function Page() {
                     </div>
                 )}
 
-                <div className="flex items-center justify-end print:hidden">
+                <div className="flex items-center justify-between print:hidden gap-4">
+                    <div className="flex items-center gap-4">
+                        <a
+                            href="https://github.com/emilianobruni/erflow"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:opacity-70 transition-opacity"
+                            aria-label="GitHub Repository"
+                        >
+                            <Github
+                                className="w-5 h-5"
+                                style={{ color: isDark ? 'white' : 'black' }}
+                            />
+                        </a>
+                        <span
+                            className="text-sm"
+                            style={{ color: isDark ? '#94a3b8' : '#64748b' }}
+                        >
+                            © 2025-{new Date().getFullYear()} - Emiliano Bruni
+                        </span>
+                    </div>
                     <ActionButtons
                         isDark={isDark}
                         onToggleDark={() => setIsDark(!isDark)}
