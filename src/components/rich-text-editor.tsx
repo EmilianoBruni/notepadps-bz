@@ -143,16 +143,6 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                                 size="icon"
                                 className="h-8 w-8 text-slate-700 hover:bg-slate-200"
                                 onClick={() => setIsToolbarOpen(false)}
-                                title="Hide toolbar"
-                            >
-                                <ChevronUp className="w-4 h-4" />
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-slate-700 hover:bg-slate-200"
-                                onClick={() => setIsToolbarOpen(false)}
                                 title="Close"
                             >
                                 <X className="w-4 h-4" />
