@@ -30,7 +30,7 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     const [isToolbarOpen, setIsToolbarOpen] = useState(false);
 
     const adjustHeight = () => {
-        if (editorRef.current) {
+        if (editorRef.current && !window.matchMedia('print').matches) {
             editorRef.current.style.height = 'auto';
             editorRef.current.style.height = `${Math.max(
                 75,
@@ -157,7 +157,7 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                     ref={editorRef}
                     contentEditable
                     onInput={handleInput}
-                    className="min-h-[75px] p-4 bg-white border-2 border-slate-300 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y overflow-auto"
+                    className="min-h-[75px] p-4 bg-white border-2 border-slate-300 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y overflow-auto print:pt-1 print:pb-1 print:min-h-0!"
                     style={{
                         wordWrap: 'break-word',
                         overflowWrap: 'break-word'
