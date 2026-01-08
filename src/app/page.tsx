@@ -208,7 +208,7 @@ export default function Page() {
                         className="text-3xl font-bold"
                         style={{ color: isDark ? 'white' : 'black' }}
                     >
-                        Promemoria pazienti
+                        E.R. Flow
                     </h1>
 
                     <div className="relative w-64">
