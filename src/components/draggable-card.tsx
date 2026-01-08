@@ -81,7 +81,7 @@ export function DraggableCard({
             <Card
                 className={`${
                     colorMap[card.color]
-                } transition-colors border-2 print-card py-2 !bg-opacity-100`}
+                } transition-colors border-2 print-card py-2 bg-opacity-100!`}
                 draggable={false}
             >
                 <CardContent className="pt-2 print-content px-2">
@@ -122,7 +122,7 @@ export function DraggableCard({
                                 onUpdate({ color: value as CardData['color'] })
                             }
                         >
-                            <SelectTrigger className="w-32 h-8 !bg-white border-slate-300 text-black">
+                            <SelectTrigger className="w-32 h-8 bg-white! border-slate-300 text-black">
                                 <SelectValue className="flex items-center justify-center">
                                     <div
                                         className={`w-10 h-5 rounded ${
@@ -181,7 +181,7 @@ export function DraggableCard({
                             onChange={e =>
                                 onUpdate({ patientName: e.target.value })
                             }
-                            className="h-8 font-bold !bg-white border-slate-300 text-black placeholder:text-slate-400"
+                            className="h-8 font-bold bg-white! border-slate-300 text-black placeholder:text-slate-400"
                         />
 
                         <Input
@@ -190,7 +190,7 @@ export function DraggableCard({
                             onChange={e =>
                                 onUpdate({ patology: e.target.value })
                             }
-                            className="h-8 !bg-white border-slate-300 text-black placeholder:text-slate-400"
+                            className="h-8 bg-white! border-slate-300 text-black placeholder:text-slate-400"
                         />
 
                         <Select
@@ -201,7 +201,7 @@ export function DraggableCard({
                                 })
                             }
                         >
-                            <SelectTrigger className="w-24 h-8 !bg-white border-slate-300 text-black">
+                            <SelectTrigger className="w-24 h-8 bg-white! border-slate-300 text-black">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="bg-white border-slate-300 text-black">
@@ -244,7 +244,7 @@ export function DraggableCard({
                                 onUpdate({ moved: value as CardData['moved'] })
                             }
                         >
-                            <SelectTrigger className="w-20 h-8 !bg-white border-slate-300 text-black">
+                            <SelectTrigger className="w-20 h-8 bg-white! border-slate-300 text-black">
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="bg-white border-slate-300 text-black">
@@ -269,7 +269,7 @@ export function DraggableCard({
                             onChange={e =>
                                 onUpdate({ movedTo: e.target.value })
                             }
-                            className="h-8 w-32 !bg-white border-slate-300 text-black placeholder:text-slate-400"
+                            className="h-8 w-32 bg-white! border-slate-300 text-black placeholder:text-slate-400"
                         />
 
                         <Button
