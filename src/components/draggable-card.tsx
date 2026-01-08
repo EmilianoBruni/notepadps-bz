@@ -206,10 +206,7 @@ export function DraggableCard({
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="bg-white border-slate-300 text-black">
-                                <SelectItem
-                                    value="empty"
-                                    className="text-black"
-                                >
+                                <SelectItem value=" " className="text-black">
                                     -
                                 </SelectItem>
                                 <SelectItem value="OBI1" className="text-black">
@@ -249,10 +246,7 @@ export function DraggableCard({
                                 <SelectValue />
                             </SelectTrigger>
                             <SelectContent className="bg-white border-slate-300 text-black">
-                                <SelectItem
-                                    value="empty"
-                                    className="text-black"
-                                >
+                                <SelectItem value=" " className="text-black">
                                     -
                                 </SelectItem>
                                 <SelectItem value="R" className="text-black">
@@ -429,7 +423,7 @@ export function DraggableCard({
                                 </SelectTrigger>
                                 <SelectContent className="bg-white border-slate-300 text-black">
                                     <SelectItem
-                                        value="empty"
+                                        value=" "
                                         className="text-black"
                                     >
                                         -
@@ -497,7 +491,7 @@ export function DraggableCard({
                                 </SelectTrigger>
                                 <SelectContent className="bg-white border-slate-300 text-black">
                                     <SelectItem
-                                        value="empty"
+                                        value=" "
                                         className="text-black"
                                     >
                                         -

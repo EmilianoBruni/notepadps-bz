@@ -20,11 +20,11 @@ export interface CardData {
         | 'COR'
         | 'ACQ'
         | 'TRI'
-        | 'empty'
         | 'OBI1'
         | 'OBI2'
-        | 'OBI3';
-    moved: 'R' | 'D' | 'empty';
+        | 'OBI3'
+        | ' ';
+    moved: 'R' | 'D' | ' ';
     movedTo: string;
     content: string;
     collapsed?: boolean;
@@ -36,8 +36,8 @@ function createDefaultCard(): CardData {
         color: 'bianco',
         patientName: '',
         patology: '',
-        location: 'empty',
-        moved: 'empty',
+        location: ' ',
+        moved: ' ',
         movedTo: '',
         content: '',
         collapsed: false
