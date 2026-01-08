@@ -33,6 +33,9 @@ LocalStorage is a browser feature that allows web applications to store up to ~1
 
 | Shortcut                                          | Action                            |
 | ------------------------------------------------- | --------------------------------- |
+| <kbd>Crtl<kbd> + <kbd>Alt</kbd> + <kbd>P</kbd>    | Add new card                      |
+| <kbd>Crtl<kbd> + <kbd>Alt</kbd> + <kbd>C</kbd>    | Collapse all cards                |
+| <kbd>Crtl<kbd> + <kbd>Alt</kbd> + <kbd>U</kbd>    | Expand all cards                  |
 | <kbd>Ctrl</kbd> + <kbd>B</kbd>                    | Bold text (in editor)             |
 | <kbd>Ctrl</kbd> + <kbd>I</kbd>                    | Italic text (in editor)           |
 | <kbd>Ctrl</kbd> + <kbd>U</kbd>                    | Underline text (in editor)        |
