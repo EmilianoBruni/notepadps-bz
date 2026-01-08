@@ -3,7 +3,7 @@
 // Card management system with drag-and-drop support
 import type React from 'react';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Search } from 'lucide-react';
 import { DraggableCard } from '@/components/draggable-card';
 import { Input } from '@/components/ui/input';
@@ -30,37 +30,105 @@ export interface CardData {
     collapsed?: boolean;
 }
 
+function createDefaultCard(): CardData {
+    return {
+        id: `card-${Date.now()}-${Math.random()}`,
+        color: 'bianco',
+        patientName: '',
+        patology: '',
+        location: 'empty',
+        moved: 'empty',
+        movedTo: '',
+        content: '',
+        collapsed: false
+    };
+}
+
 export default function Page() {
-    const [cards, setCards] = useState<CardData[]>([]);
-    const [isClient, setIsClient] = useState(false);
-    const [isDark, setIsDark] = useState(false);
-    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
-    const [searchQuery, setSearchQuery] = useState('');
+    const isClientRef = useRef(false);
 
-    useEffect(() => {
-        setIsClient(true);
-        const darkMode = localStorage.getItem('dark-mode') === 'true';
-        setIsDark(darkMode);
-        if (darkMode) {
-            document.documentElement.classList.add('dark');
-        }
-
+    // Initialize state from localStorage on first render
+    const [cards, setCards] = useState<CardData[]>(() => {
+        if (typeof window === 'undefined') return [];
         const saved = localStorage.getItem('draggable-cards');
         if (saved) {
             try {
-                const parsed = JSON.parse(saved);
-                setCards(parsed);
+                return JSON.parse(saved);
             } catch (e) {
                 console.error('Failed to parse saved cards:', e);
-                setCards([createDefaultCard()]);
+                return [createDefaultCard()];
             }
-        } else {
-            setCards([createDefaultCard()]);
         }
+        return [createDefaultCard()];
+    });
+
+    const [isDark, setIsDark] = useState(() => {
+        if (typeof window === 'undefined') return false;
+        return localStorage.getItem('dark-mode') === 'true';
+    });
+
+    const [draggedIndex, setDraggedIndex] = useState<number | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const addCard = useCallback(() => {
+        setCards(prevCards => [...prevCards, createDefaultCard()]);
+    }, []);
+
+    function removeCard(id: string) {
+        setCards(cards.filter(card => card.id !== id));
+    }
+
+    function updateCard(id: string, updates: Partial<CardData>) {
+        setCards(
+            cards.map(card => (card.id === id ? { ...card, ...updates } : card))
+        );
+    }
+
+    const collapseAll = useCallback(() => {
+        setCards(prevCards =>
+            prevCards.map(card => ({ ...card, collapsed: true }))
+        );
+    }, []);
+
+    const expandAll = useCallback(() => {
+        setCards(prevCards =>
+            prevCards.map(card => ({ ...card, collapsed: false }))
+        );
     }, []);
 
     useEffect(() => {
-        if (isClient) {
+        isClientRef.current = true;
+        // Apply dark mode class on mount
+        if (isDark) {
+            document.documentElement.classList.add('dark');
+        }
+    }, [isDark]);
+
+    useEffect(() => {
+        if (!isClientRef.current) return;
+
+        function handleKeydown(e: KeyboardEvent) {
+            if (!e.ctrlKey || !e.altKey) return;
+            const key = e.key.toLowerCase();
+
+            if (key === 'p') {
+                e.preventDefault();
+                addCard();
+            } else if (key === 'c') {
+                e.preventDefault();
+                collapseAll();
+            } else if (key === 'u') {
+                e.preventDefault();
+                expandAll();
+            }
+        }
+
+        window.addEventListener('keydown', handleKeydown);
+        return () => window.removeEventListener('keydown', handleKeydown);
+    }, [addCard, collapseAll, expandAll]);
+
+    useEffect(() => {
+        if (isClientRef.current) {
             localStorage.setItem('dark-mode', isDark.toString());
             if (isDark) {
                 document.documentElement.classList.add('dark');
@@ -68,27 +136,13 @@ export default function Page() {
                 document.documentElement.classList.remove('dark');
             }
         }
-    }, [isDark, isClient]);
+    }, [isDark]);
 
     useEffect(() => {
-        if (isClient && cards.length > 0) {
+        if (isClientRef.current && cards.length > 0) {
             localStorage.setItem('draggable-cards', JSON.stringify(cards));
         }
-    }, [cards, isClient]);
-
-    function createDefaultCard(): CardData {
-        return {
-            id: `card-${Date.now()}-${Math.random()}`,
-            color: 'bianco',
-            patientName: '',
-            patology: '',
-            location: 'empty',
-            moved: 'empty',
-            movedTo: '',
-            content: '',
-            collapsed: false
-        };
-    }
+    }, [cards]);
 
     function handleDragStart(index: number) {
         setDraggedIndex(index);
@@ -108,28 +162,6 @@ export default function Page() {
 
     function handleDragEnd() {
         setDraggedIndex(null);
-    }
-
-    function addCard() {
-        setCards([...cards, createDefaultCard()]);
-    }
-
-    function removeCard(id: string) {
-        setCards(cards.filter(card => card.id !== id));
-    }
-
-    function updateCard(id: string, updates: Partial<CardData>) {
-        setCards(
-            cards.map(card => (card.id === id ? { ...card, ...updates } : card))
-        );
-    }
-
-    function collapseAll() {
-        setCards(cards.map(card => ({ ...card, collapsed: true })));
-    }
-
-    function expandAll() {
-        setCards(cards.map(card => ({ ...card, collapsed: false })));
     }
 
     function deleteAll() {
@@ -165,10 +197,6 @@ export default function Page() {
         card.patientName.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
-    if (!isClient) {
-        return null;
-    }
-
     return (
         <div
             className="min-h-screen p-6 print:bg-white print:p-0"
@@ -190,7 +218,7 @@ export default function Page() {
                             placeholder="Cerca per nome paziente..."
                             value={searchQuery}
                             onChange={e => setSearchQuery(e.target.value)}
-                            className="pl-10 !bg-white !text-black border-gray-300"
+                            className="pl-10 bg-white! text-black! border-gray-300"
                             style={{
                                 backgroundColor: 'white',
                                 color: 'black'
@@ -209,7 +237,7 @@ export default function Page() {
                 </div>
 
                 <div className="space-y-4">
-                    {filteredCards.map((card, index) => (
+                    {filteredCards.map(card => (
                         <div
                             key={card.id}
                             data-card-index={cards.findIndex(
@@ -260,7 +288,8 @@ export default function Page() {
                         className="text-center py-12 print:hidden"
                         style={{ color: isDark ? '#94a3b8' : '#64748b' }}
                     >
-                        Nessun paziente trovato con il nome "{searchQuery}".
+                        Nessun paziente trovato con il nome &quot;{searchQuery}
+                        &quot;.
                     </div>
                 )}
 
@@ -269,8 +298,8 @@ export default function Page() {
                         className="text-center py-12 print:hidden"
                         style={{ color: isDark ? '#94a3b8' : '#64748b' }}
                     >
-                        Ancora nessun paziente. Premi su "Aggiungi paziente" per
-                        crearne uno.
+                        Ancora nessun paziente. Premi su &quot;Aggiungi
+                        paziente&quot; per crearne uno.
                     </div>
                 )}
 
