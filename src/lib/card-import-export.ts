@@ -92,10 +92,10 @@ export function importCardsFromJson(text: string): CardData[] | null {
 /**
  * Imports cards from clipboard text, creating one card per non-empty line
  */
-export async function importCardsFromClipboard(): Promise<CardData[] | null> {
+export async function importCardsFromClipboard(
+    text: string
+): Promise<CardData[] | null> {
     try {
-        const text = await navigator.clipboard.readText();
-
         const rawLines = text.split(/\r?\n/).map(l => l.trimEnd());
         // Identify entry blocks by lines starting with a triage color + patient name
         const colorLineRegex =

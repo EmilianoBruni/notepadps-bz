@@ -197,8 +197,8 @@ export default function Page() {
         }
     }
 
-    async function importCardsFromClipboard() {
-        const newCards = await parseCardsFromClipboard();
+    async function importCardsFromClipboard(text: string) {
+        const newCards = await parseCardsFromClipboard(text);
         if (newCards) {
             setCards(prev => [...prev, ...newCards]);
         }
