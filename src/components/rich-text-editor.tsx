@@ -2,15 +2,7 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-    Bold,
-    List,
-    Palette,
-    ChevronUp,
-    X,
-    Strikethrough,
-    Settings2
-} from 'lucide-react';
+import { Bold, List, Palette, X, Strikethrough, Settings2 } from 'lucide-react';
 import {
     Select,
     SelectContent,
@@ -63,6 +55,19 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
         if (editorRef.current) {
             onChange(editorRef.current.innerHTML);
             adjustHeight();
+        }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+        // Ctrl-Alt-B for bold
+        if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'b') {
+            e.preventDefault();
+            execCommand('bold');
+        }
+        // Ctrl-Alt-S for strikethrough
+        if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 's') {
+            e.preventDefault();
+            execCommand('strikeThrough');
         }
     };
 
@@ -133,23 +138,6 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                             </Button>
                         </div>
 
-                        <Select
-                            defaultValue="normal"
-                            onValueChange={value =>
-                                execCommand('formatBlock', value)
-                            }
-                        >
-                            <SelectTrigger className="w-32 h-8 bg-white border-slate-300 text-black">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent className="bg-white border-slate-300">
-                                <SelectItem value="p">Normal</SelectItem>
-                                <SelectItem value="h1">Heading 1</SelectItem>
-                                <SelectItem value="h2">Heading 2</SelectItem>
-                                <SelectItem value="h3">Heading 3</SelectItem>
-                            </SelectContent>
-                        </Select>
-
                         <div className="ml-auto flex items-center gap-1">
                             <Button
                                 type="button"
@@ -169,8 +157,10 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
             <div className="relative">
                 <div
                     ref={editorRef}
-                    contentEditable
+                    contentEditable="true"
+                    suppressContentEditableWarning={true}
                     onInput={handleInput}
+                    onKeyDown={handleKeyDown}
                     className="min-h-[75px] p-4 bg-white border-2 border-slate-300 text-black rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y overflow-auto print:pt-1 print:pb-1 print:min-h-0!"
                     style={{
                         wordWrap: 'break-word',

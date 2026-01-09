@@ -31,17 +31,13 @@ LocalStorage is a browser feature that allows web applications to store up to ~1
 
 ## Keyboard Shortcuts
 
-| Shortcut                                          | Action                            |
-| ------------------------------------------------- | --------------------------------- |
-| <kbd>Crtl<kbd> + <kbd>Alt</kbd> + <kbd>P</kbd>    | Add new card                      |
-| <kbd>Crtl<kbd> + <kbd>Alt</kbd> + <kbd>C</kbd>    | Collapse all cards                |
-| <kbd>Crtl<kbd> + <kbd>Alt</kbd> + <kbd>U</kbd>    | Expand all cards                  |
-| <kbd>Ctrl</kbd> + <kbd>B</kbd>                    | Bold text (in editor)             |
-| <kbd>Ctrl</kbd> + <kbd>I</kbd>                    | Italic text (in editor)           |
-| <kbd>Ctrl</kbd> + <kbd>U</kbd>                    | Underline text (in editor)        |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd> | Strikethrough text (in editor)    |
-| <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd> | Insert unordered list (in editor) |
-| <kbd>Ctrl</kbd> + <kbd>P</kbd>                    | Print current page                |
+| Shortcut                                        | Action                         |
+| ----------------------------------------------- | ------------------------------ |
+| <kbd>Crtl</kbd> + <kbd>Alt</kbd> + <kbd>P</kbd> | Add new card                   |
+| <kbd>Crtl</kbd> + <kbd>Alt</kbd> + <kbd>C</kbd> | Collapse all cards             |
+| <kbd>Crtl</kbd> + <kbd>Alt</kbd> + <kbd>U</kbd> | Expand all cards               |
+| <kbd>Crtl</kbd> + <kbd>Alt</kbd> + <kbd>B</kbd> | Bold text (in editor)          |
+| <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>S</kbd> | Strikethrough text (in editor) |
 
 ## Technology Stack
 
